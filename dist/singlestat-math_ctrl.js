@@ -475,8 +475,10 @@ System.register(["lodash", "jquery", "jquery.flot", "./lib/flot/jquery.flot.gaug
                     var panel = ctrl.panel;
                     var templateSrv = this.templateSrv;
                     var data, linkInfo;
-                    var $panelContainer = elem.find('.panel-container');
                     elem = elem.find('.singlestatmath-panel');
+                    function getPanelContainer() {
+                        return elem.closest('.panel-content');
+                    }
                     function applyColoringThresholds(value, valueString) {
                         if (!panel.colorValue) {
                             return valueString;
@@ -661,45 +663,26 @@ System.register(["lodash", "jquery", "jquery.flot", "./lib/flot/jquery.flot.gaug
                                 color = getColorForValue(panel.thresholds, data.value);
                             }
                             if (color) {
-                                $panelContainer.css('background-color', color);
-                                if (scope.fullscreen) {
-                                    elem.css('background-color', color);
-                                }
-                                else {
-                                    elem.css('background-color', '');
-                                }
+                                getPanelContainer().css('background-color', color);
+                                elem.css('background-color', color);
                             }
                         }
                         else {
-                            $panelContainer.css('background-color', '');
+                            getPanelContainer().css('background-color', color);
                             elem.css('background-color', '');
                             panel.circleBackground = false;
                         }
                         if (panel.circleBackground) {
-                            var circleHeight = jquery_1.default($panelContainer.height())[0] - 26;
-                            var circleWidth = jquery_1.default($panelContainer.width())[0];
-                            jquery_1.default($panelContainer).addClass('circle');
-                            $panelContainer.css('background-color', '');
-                            if (circleWidth >= circleHeight) {
-                                elem.css({
-                                    'border-radius': 50 + '%',
-                                    'width': circleHeight + 'px',
-                                    'height': circleHeight + 'px',
-                                    'background-color': color
-                                });
-                            }
-                            else {
-                                elem.css({
-                                    'border-radius': 50 + '%',
-                                    'width': circleWidth + 'px',
-                                    'height': circleWidth + 'px',
-                                    'background-color': color
-                                });
-                            }
+                            jquery_1.default(getPanelContainer()).addClass('circle');
+                            getPanelContainer().css('background-color', '');
+                            elem.css({
+                                'border-radius': 50 + '%',
+                                'background-color': color
+                            });
                         }
                         else {
-                            jquery_1.default($panelContainer.removeClass('circle'));
-                            elem.css({ 'border-radius': '0', width: '', height: '' });
+                            jquery_1.default(getPanelContainer().removeClass('circle'));
+                            elem.css({ 'border-radius': '0' });
                         }
                         elem.html(body);
                         if (panel.sparkline.show) {
